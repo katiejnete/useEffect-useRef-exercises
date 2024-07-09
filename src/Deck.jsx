@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import Card from "./Card";
-import "./Deck.css"
+import "./Deck.css";
 
 const Deck = () => {
   const deckId = useRef();
@@ -34,8 +34,8 @@ const Deck = () => {
         );
         const newCard = res.data.cards[0];
         if (!newCard) throw new Error("No cards remaining!");
-        newCard.rotation = `rotate(${Math.floor(Math.random()*361)}deg)`;
-        setDrawnCards((prevDrawn) => [...prevDrawn, newCard]); 
+        newCard.rotation = `rotate(${Math.floor(Math.random() * 361)}deg)`;
+        setDrawnCards((prevDrawn) => [...prevDrawn, newCard]);
       } catch (error) {
         console.error("Error drawing card:", error);
         alert("Error: No cards remaining!");
@@ -48,12 +48,14 @@ const Deck = () => {
   const shuffleDeck = () => {
     if (isShuffling) return;
     setIsShuffling(true);
-  }
+  };
 
   useEffect(() => {
     const shuffleCards = async () => {
       try {
-        const res = await axios.get(`https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1`);
+        const res = await axios.get(
+          `https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1`
+        );
         deckId.current = res.data.deck_id;
         setDrawnCards([]);
         setCardsRemaining(52);
@@ -66,14 +68,20 @@ const Deck = () => {
       shuffleCards();
       setIsShuffling(false);
     }
-  })
+  });
 
   return (
     <>
-      {cardsRemaining >= 0 && <button onClick={drawCard}>Give me a card!</button>}
+      {cardsRemaining >= 0 && (
+        <button onClick={drawCard}>Give me a card!</button>
+      )}
       <button onClick={shuffleDeck}>Shuffle</button>
       <div>
-      {!isShuffling && drawnCards && drawnCards.map(({ code, image, rotation }) => <Card key={code} image={image} rotation={rotation}/>)}
+        {!isShuffling &&
+          drawnCards &&
+          drawnCards.map(({ code, image, rotation }) => (
+            <Card key={code} image={image} rotation={rotation} />
+          ))}
       </div>
     </>
   );
